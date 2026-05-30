@@ -1,6 +1,7 @@
-pandas
+streamlit
 fastapi
-uvicorn
-openai
+pandas
+google-generativeai
 python-dotenv
-python-multipart
+numpy
+uvicorn
