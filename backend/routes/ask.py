@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from backend.database.duckdb_manager import con
 from backend.agents.sql_agent import get_schema
 from backend.services.llm_service import generate_sql
+from backend.agents.chart_agent import (suggest_chart,build_chart)
+
 
 router = APIRouter()
 
@@ -32,8 +34,28 @@ def ask(
     from backend.agents.insight_agent import generate_insight
 
     rows = result.to_dict(
-            orient="records"
-        )
+        orient="records"
+    )
+
+    insight = generate_insight(
+        req.question,
+        rows
+    )
+
+    chart_type = suggest_chart(
+        req.question,
+        rows
+    )
+
+    chart = build_chart(
+        rows,
+        chart_type
+    )
+    
+    chart_type = suggest_chart(
+    req.question,
+    rows
+)
 
     insight = generate_insight(
             req.question,
@@ -41,8 +63,9 @@ def ask(
         )
 
     return {
-            "question": req.question,
-            "sql": sql,
-            "rows": rows,
-            "insight": insight
-        }
+        "question": req.question,
+        "sql": sql,
+        "rows": rows,
+        "insight": insight,
+        "chart": chart
+    }
